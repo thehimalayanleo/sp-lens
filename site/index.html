@@ -133,7 +133,7 @@ footer { padding: 48px 0 64px; color: var(--dim); font-size: 13px; border-top: 1
 </style>
 </head>
 <body>
-<nav><div class="w"><a href="#watch">Watch</a><a href="#how">How</a><a href="#results">Results</a><a href="#use">Use it</a><a href="https://github.com/thehimalayanleo/splens">GitHub</a></div></nav>
+<nav><div class="w"><a href="#watch">Watch</a><a href="#how">How</a><a href="#results">Results</a><a href="#use">Use it</a><a href="https://github.com/thehimalayanleo/sp-lens">GitHub</a></div></nav>
 
 <header class="hero">
   <canvas id="wall" aria-hidden="true"></canvas>
@@ -204,7 +204,7 @@ footer { padding: 48px 0 64px; color: var(--dim); font-size: 13px; border-top: 1
           <li>It does not win at every layer.</li>
           <li>Poetry planning (the rhyme a model plans ahead) stays near zero for every lens, SP-Lens included.</li>
           <li>An agreement-gated variant replicated on Qwen 27B models, but tied on SmolLM2-1.7B and OLMo2-1B.</li>
-          <li>The library agrees with the research harness on about 91% of displayed tokens across hardware. It is the same algorithm, close numerically, but not bit-identical (<a href="https://github.com/thehimalayanleo/splens/blob/main/docs/parity.md">parity notes</a>).</li>
+          <li>The library agrees with the research harness on about 91% of displayed tokens across hardware. It is the same algorithm, close numerically, but not bit-identical (<a href="https://github.com/thehimalayanleo/sp-lens/blob/main/docs/parity.md">parity notes</a>).</li>
         </ul>
       </details>
     </div>
@@ -227,7 +227,7 @@ footer { padding: 48px 0 64px; color: var(--dim); font-size: 13px; border-top: 1
     <div class="prose">
       <p>Works with decoder-only models in the Llama, Qwen, SmolLM and OLMo families, and looped models such as Ouro. Without fitted lenses, SP-Lens falls back to the logit lens plus earlier positions, which needs no fitting.</p>
 <pre><button class="copy">copy</button><span class="c"># install</span>
-pip install git+https://github.com/thehimalayanleo/splens
+pip install git+https://github.com/thehimalayanleo/sp-lens
 
 <span class="c"># fit the J and R transports once per model (GPU above ~1B parameters)</span>
 splens fit HuggingFaceTB/SmolLM3-3B --out lenses/smollm3
@@ -245,7 +245,7 @@ reading = lens.read("Fact: the currency of Japan is")
 print(reading.table())               <span class="c"># SP-Lens top 10 per layer</span></pre>
     </div>
     <div class="links">
-      <a class="primary" href="https://github.com/thehimalayanleo/splens">GitHub</a>
+      <a class="primary" href="https://github.com/thehimalayanleo/sp-lens">GitHub</a>
       <a href="demo/">All 421 prompts</a>
       <a href="library.html">Concept library</a>
     </div>

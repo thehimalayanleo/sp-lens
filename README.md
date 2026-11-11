@@ -2,12 +2,12 @@
 
 **What a language model thinks before it speaks.**
 
-[![tests](https://github.com/thehimalayanleo/splens/actions/workflows/tests.yml/badge.svg)](https://github.com/thehimalayanleo/splens/actions/workflows/tests.yml)
+[![tests](https://github.com/thehimalayanleo/sp-lens/actions/workflows/tests.yml/badge.svg)](https://github.com/thehimalayanleo/sp-lens/actions/workflows/tests.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-[![SP-Lens site](assets/hero.jpg)](https://thehimalayanleo.github.io/splens/)
+[![SP-Lens site](assets/hero.jpg)](https://thehimalayanleo.github.io/sp-lens/)
 
-**[Open the interactive site →](https://thehimalayanleo.github.io/splens/)** Watch a hidden concept form layer by layer, on real prompts.
+**[Open the interactive site →](https://thehimalayanleo.github.io/sp-lens/)** Watch a hidden concept form layer by layer, on real prompts.
 
 Give a model the sentence *"She kept his coffee mug on the counter, washed it every morning and put it back, though no one had used it in eleven months."* It never writes *grief*, but somewhere in its middle layers it is thinking it. SP-Lens reads those words out.
 
@@ -24,7 +24,7 @@ Settings were fixed on a development split, then measured once on this confirmat
 ## Install
 
 ```bash
-pip install git+https://github.com/thehimalayanleo/splens
+pip install git+https://github.com/thehimalayanleo/sp-lens
 ```
 
 Or, from a clone, `pip install -e .`. Needs Python 3.10+, PyTorch 2.3+ and Transformers 4.45+.

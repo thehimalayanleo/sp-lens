@@ -4,7 +4,7 @@ title: "SP-Lens: reading hidden concepts in language model layers"
 authors:
   - family-names: Mulay
     given-names: Ajinkya K
-repository-code: "https://github.com/thehimalayanleo/splens"
+repository-code: "https://github.com/thehimalayanleo/sp-lens"
 license: MIT
 version: 0.1.0
 date-released: 2026-11-10

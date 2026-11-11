@@ -22,8 +22,8 @@ dependencies = ["torch>=2.3", "transformers>=4.45", "datasets>=2.20"]
 test = ["pytest>=8"]
 
 [project.urls]
-Homepage = "https://thehimalayanleo.github.io/splens/"
-Source = "https://github.com/thehimalayanleo/splens"
+Homepage = "https://thehimalayanleo.github.io/sp-lens/"
+Source = "https://github.com/thehimalayanleo/sp-lens"
 
 [project.scripts]
 splens = "splens.cli:main"
