@@ -1,0 +1,9 @@
+__pycache__/
+.DS_Store
+*.pyc
+.cache/
+*.egg-info/
+uv.lock
+.venv/
+.pytest_cache/
+_site/

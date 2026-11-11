@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "splens"
+version = "0.1.0"
+description = "SP-Lens: read the concepts a language model holds in its middle layers"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Ajinkya K Mulay" }]
+keywords = ["interpretability", "logit lens", "language models", "transformers"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["torch>=2.3", "transformers>=4.45", "datasets>=2.20"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://thehimalayanleo.github.io/splens/"
+Source = "https://github.com/thehimalayanleo/splens"
+
+[project.scripts]
+splens = "splens.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

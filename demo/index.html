@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SP-Lens Keywords</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: instrument readout. Summary strip on top, then a prompt picker beside a two-column J vs SP-Lens comparison. */
+:root {
+  --bg: #f4f5f7;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5d6676;
+  --line: #dde1e8;
+  --sp: #2b47c9;
+  --sp-soft: #e6eaf9;
+  --j: #6b7385;
+  --j-soft: #eceef2;
+  --mark: #eef36d;
+  --mark-ink: #18202c;
+  --dim: #a3aab7;
+  --f-ui: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-tok: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --panel: #1a1f28; --ink: #e6e9ef; --muted: #9aa3b2; --line: #2b3240;
+    --sp: #8ea2ff; --sp-soft: #232c4d; --j: #a2a9b8; --j-soft: #262b35;
+    --mark: rgba(220, 236, 90, .30); --mark-ink: #f4f7d8; --dim: #5d6574; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --panel: #1a1f28; --ink: #e6e9ef; --muted: #9aa3b2; --line: #2b3240;
+  --sp: #8ea2ff; --sp-soft: #232c4d; --j: #a2a9b8; --j-soft: #262b35;
+  --mark: rgba(220, 236, 90, .30); --mark-ink: #f4f7d8; --dim: #5d6574; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-ui); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 28px; }
+h1 { font-size: 34px; line-height: 1.1; margin: 0; font-weight: 700; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+p { margin: 0; }
+.lede { max-width: 68ch; color: var(--muted); margin-top: 8px; }
+.lede b { color: var(--ink); font-weight: 600; }
+.meta { font-family: var(--f-tok); font-size: 12px; color: var(--muted); margin-top: 10px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; min-width: 0; }
+.summary { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
+@media (max-width: 860px) { .summary { grid-template-columns: 1fr; } }
+.bars { display: grid; gap: 9px; }
+.bar { display: grid; grid-template-columns: 118px 1fr 52px; gap: 10px; align-items: center; font-size: 14px; }
+.bar .track { height: 14px; background: var(--j-soft); border-radius: 3px; position: relative; overflow: hidden; }
+.bar .fill { position: absolute; inset: 0 auto 0 0; background: var(--j); border-radius: 3px; }
+.bar.sp .fill { background: var(--sp); }
+.bar.sp .name { font-weight: 600; color: var(--sp); }
+.bar .v { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+.axis { display: grid; grid-template-columns: 118px 1fr 52px; gap: 10px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.axis .ticks { position: relative; height: 14px; }
+.axis .ticks span { position: absolute; transform: translateX(-50%); }
+.axis .ticks span:first-child { transform: none; }
+.axis .ticks span:last-child { transform: translateX(-100%); }
+.note { font-size: 13px; color: var(--muted); margin-top: 12px; max-width: 70ch; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pair .cell { border-radius: 8px; padding: 12px 14px; background: var(--j-soft); }
+.pair .cell.win { background: var(--sp-soft); }
+.pair .num { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.pair .cell.win .num { color: var(--sp); }
+.pair .lab { font-size: 13px; color: var(--muted); }
+table.cats { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; font-variant-numeric: tabular-nums; }
+table.cats th, table.cats td { padding: 5px 6px; text-align: right; border-bottom: 1px solid var(--line); }
+table.cats th:first-child, table.cats td:first-child { text-align: left; }
+table.cats th { color: var(--muted); font-weight: 500; }
+table.cats td.best { color: var(--sp); font-weight: 600; }
+
+.explorer { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 860px) { .explorer { grid-template-columns: 1fr; } }
+.picker { display: grid; gap: 10px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+@media (max-width: 860px) { .picker { position: static; } }
+.controls { display: grid; gap: 8px; }
+input[type=search], select { width: 100%; font: inherit; font-size: 14px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); color: var(--ink); }
+label.chk { font-size: 13px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.list { max-height: 560px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+@media (max-width: 860px) { .list { max-height: 260px; } }
+.list button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 9px 12px; border-bottom: 1px solid var(--line); cursor: pointer; font-size: 13px; line-height: 1.35; }
+.list button:hover { background: var(--j-soft); }
+.list button[aria-current="true"] { background: var(--sp-soft); }
+.list button:focus-visible { outline: 2px solid var(--sp); outline-offset: -2px; }
+.list .cat { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: var(--line); }
+.dot.on { background: var(--sp); }
+.dot.j.on { background: var(--j); }
+.list .txt { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count { font-size: 12px; color: var(--muted); }
+
+.detail { display: grid; gap: 16px; min-width: 0; }
+.prompt { font-size: 19px; line-height: 1.45; }
+.prompt .ro { background: var(--j-soft); border-radius: 4px; padding: 0 4px; font-family: var(--f-tok); font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.concept { font-family: var(--f-tok); font-size: 14px; background: var(--mark); color: var(--mark-ink); padding: 2px 8px; border-radius: 4px; }
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 620px) { .cmp { grid-template-columns: 1fr; } }
+.col h3 { margin: 0 0 10px; font-size: 15px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.col.sp h3 { color: var(--sp); }
+.status { font-size: 12px; font-weight: 500; color: var(--muted); }
+.status.yes { color: var(--sp); }
+.kw { font-family: var(--f-tok); font-size: 14px; padding: 4px 9px; border-radius: 5px; background: var(--j-soft); }
+.col.sp .kw { background: var(--sp-soft); }
+.kw.hit, .col.sp .kw.hit { background: var(--mark); color: var(--mark-ink); font-weight: 500; }
+.kw sup { font-size: 10px; color: var(--muted); margin-left: 3px; }
+.kw.hit sup { color: inherit; opacity: .7; }
+.empty { font-size: 13px; color: var(--muted); }
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+summary:focus-visible { outline: 2px solid var(--sp); outline-offset: 2px; }
+.layers { overflow-x: auto; margin-top: 12px; }
+table.lay { border-collapse: collapse; font-family: var(--f-tok); font-size: 12px; min-width: 760px; width: 100%; }
+table.lay th { font-family: var(--f-ui); font-weight: 600; font-size: 12px; text-align: left; color: var(--muted); padding: 4px 6px; position: sticky; top: 0; background: var(--panel); }
+table.lay td { padding: 3px 6px; border-top: 1px solid var(--line); vertical-align: top; }
+table.lay td.l { color: var(--muted); font-variant-numeric: tabular-nums; width: 34px; }
+table.lay .t { display: inline-block; margin: 1px 4px 1px 0; padding: 0 3px; border-radius: 3px; white-space: pre; }
+table.lay .t.junk { color: var(--dim); }
+table.lay .t.hit { background: var(--mark); color: var(--mark-ink); }
+.switches { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 16px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.seg .lab { font-size: 12px; color: var(--muted); padding: 7px 10px; border-right: 1px solid var(--line); align-self: center; }
+.seg button { font: inherit; font-size: 14px; border: 0; background: none; color: var(--ink); padding: 7px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--sp); color: var(--panel); font-weight: 600; }
+.seg button:focus-visible { outline: 2px solid var(--sp); outline-offset: -2px; }
+.method { font-size: 14px; color: var(--muted); display: grid; gap: 8px; max-width: 78ch; }
+.method b { color: var(--ink); font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width .5s ease; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>SP-Lens Keywords</h1>
+    <p class="lede">Before a language model writes its next word, its middle layers often hold a concept it never says: the country in a two-step question, the correct spelling behind a typo. A lens reads those layers as words. <b>SP-Lens</b> combines the J-lens with the R-lens, the logit lens and earlier token positions, then cleans the list. Here it is beside the J-lens, R-lens and logit lens on held-out prompts from three open models.</p>
+    <p class="meta" id="meta">Loading…</p>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="Model" id="models"></div>
+      <div class="seg" role="group" aria-label="Compare SP-Lens against" id="bases"></div>
+    </div>
+  </header>
+
+  <section class="summary">
+    <div class="panel">
+      <h2>How often the hidden concept appears</h2>
+      <div class="bars" id="bars"></div>
+      <div class="axis"><span></span><div class="ticks"><span style="left:0">0%</span><span style="left:25%">20%</span><span style="left:50%">40%</span><span style="left:75%">60%</span><span style="left:100%">80%</span></div><span></span></div>
+      <p class="note">Share of prompts where at least one labelled intermediate concept is in a lens's top 10 at some layer. Same budget for every lens: 10 tokens per layer.</p>
+    </div>
+    <div class="panel">
+      <h2 id="pairtitle">SP-Lens vs J-lens, same prompts</h2>
+      <div class="pair" id="pair"></div>
+      <table class="cats" id="cats"></table>
+    </div>
+  </section>
+
+  <section class="explorer">
+    <div class="picker">
+      <div class="controls">
+        <input type="search" id="q" placeholder="Search prompts or concepts" aria-label="Search prompts or concepts">
+        <select id="cat" aria-label="Category"></select>
+        <label class="chk"><input type="checkbox" id="onlysp"> <span id="onlylab">Only prompts where SP-Lens finds it and the J-lens does not</span></label>
+      </div>
+      <div class="count" id="count"></div>
+      <div class="list" id="list" role="listbox" aria-label="Prompts"></div>
+    </div>
+    <div class="panel detail" id="detail"><p class="empty">Loading prompts…</p></div>
+  </section>
+
+  <section class="panel method">
+    <h2>How to read this</h2>
+    <p><b>Keywords</b> come from the per-layer lists of each lens. Only word-like tokens count, and a token that shows up in the lists of 5% or more of all prompts is dropped as background noise. Each token scores 1/rank × log(prompts ÷ prompts containing it), summed over layers. The small number is how many layers it appeared in. This step is for display. It never sees the labels, and it runs the same way for every lens. On the looped Ouro models a layer reads as loop step.layer.</p>
+    <p><b>Highlighted</b> words match a labelled intermediate concept for that prompt. Grey tokens in the layer table are not word-like.</p>
+    <p><b>The numbers</b> come from the confirmation split, using the lens settings fixed in the SPLENS-V4 development round. The bar chart counts a prompt as found when any layer's list contains the concept. That is a simpler summary than the benchmark's pass@10 metric. The keyword hit rates (<span id="kwb"></span>, SP-Lens <span id="kwsp"></span>) are a post hoc look and not a benchmark result.</p>
+  </section>
+</div>
+
+<script>
+const MODELS = [["smollm3_3b", "SmolLM3-3B"], ["ouro_1p4b", "Ouro-1.4B"], ["ouro_2p6b", "Ouro-2.6B"]];
+const NAMES = { "J": "J-lens", "R": "R-lens", "logit": "Logit lens", "JR+prev": "SP-Lens", "J-free": "SP-Lens, no J" };
+const ORDER = ["JR+prev", "J-free", "J", "logit", "R"];
+const BASES = ["J", "R", "logit"];
+const pct = x => (100 * x).toFixed(1) + "%";
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const show = s => s.replace(/\n/g, "↵").replace(/^ /, "·").replace(/ /g, "⍽");
+const wordlike = /^\s?[A-Za-zÀ-ɏЀ-ӿ][a-zß-ɏа-я]{2,}$|^\s?\d+$/;
+const any = a => a.some(Boolean);
+const $ = id => document.getElementById(id);
+const cache = {};
+let D, model = MODELS[0][0], base = "J", view = [], cur = -1;
+try { const m = localStorage.getItem("splens-model"); if (MODELS.some(x => x[0] === m)) model = m; } catch (e) {}
+if (MODELS.some(x => x[0] === location.hash.slice(1))) model = location.hash.slice(1);
+
+function seg(el, opts, val, pick) {
+  el.innerHTML = opts.map(([k, n]) => `<button type="button" data-k="${k}" aria-pressed="${k === val}">${n}</button>`).join("");
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => pick(b.dataset.k)));
+}
+function switches() {
+  seg($("models"), MODELS, model, k => { model = k; try { localStorage.setItem("splens-model", k); } catch (e) {} load(); });
+  seg($("bases"), BASES.map(b => [b, "vs " + NAMES[b]]), base, k => { base = k; switches(); summary(); filter(); });
+}
+function load() {
+  switches();
+  $("meta").textContent = "Loading " + MODELS.find(x => x[0] === model)[1] + "…";
+  const got = cache[model] ? Promise.resolve(cache[model]) : fetch("data/" + model + ".json").then(r => { if (!r.ok) throw r; return r.json(); });
+  got.then(d => { cache[model] = d; D = d; cur = -1; init(); }).catch(() => {
+    $("meta").textContent = "This model's data did not load. Pick it again to retry.";
+  });
+}
+
+function summary() {
+  const s = D.stats, b = base;
+  $("meta").textContent = `${D.model.split("/").pop()} · ${D.items.length} held-out confirmation prompts · ${D.layers.length} source layers · top 10 tokens per layer`;
+  $("bars").innerHTML = ORDER.map(a =>
+    `<div class="bar ${a === "JR+prev" || a === "J-free" ? "sp" : ""}"><span class="name">${NAMES[a]}</span><div class="track"><div class="fill" style="width:${Math.min(100, s[a].found / .8 * 100)}%"></div></div><span class="v">${pct(s[a].found)}</span></div>`).join("");
+  const p = s.pairs[b];
+  $("pairtitle").textContent = `SP-Lens vs ${NAMES[b]}, same prompts`;
+  $("pair").innerHTML =
+    `<div class="cell win"><div class="num">${p.sp_only}</div><div class="lab">prompts only SP-Lens finds</div></div>` +
+    `<div class="cell"><div class="num">${p.base_only}</div><div class="lab">prompts only the ${NAMES[b]} finds</div></div>`;
+  const cats = Object.keys(s.cats);
+  $("cats").innerHTML = `<tr><th>Category</th><th>n</th><th>${NAMES[b]}</th><th>SP-Lens</th></tr>` +
+    cats.map(c => { const r = s.cats[c], best = Math.max(r[b], r["JR+prev"]);
+      const td = v => `<td class="${v === best && v > 0 ? "best" : ""}">${(100 * v).toFixed(0)}%</td>`;
+      return `<tr><td>${c}</td><td>${s.catn[c]}</td>${td(r[b])}${td(r["JR+prev"])}</tr>`; }).join("");
+  $("kwb").textContent = `${NAMES[b]} ${pct(s[b].kwhit)}`;
+  $("kwsp").textContent = pct(s["JR+prev"].kwhit);
+  $("onlylab").textContent = `Only prompts where SP-Lens finds it and the ${NAMES[b]} does not`;
+}
+
+function init() {
+  summary();
+  const cats = Object.keys(D.stats.cats), sel = $("cat"), keep = sel.value;
+  sel.innerHTML = `<option value="">All categories (${D.items.length})</option>` + cats.map(c => `<option value="${c}">${c} (${D.stats.catn[c]})</option>`).join("");
+  if (cats.includes(keep)) sel.value = keep;
+  const start = D.items.findIndex(x => /wolrd/.test(x.p));
+  cur = start >= 0 ? start : 0;
+  filter();
+}
+
+function filter() {
+  const q = $("q").value.trim().toLowerCase(), c = $("cat").value, only = $("onlysp").checked;
+  view = [];
+  D.items.forEach((x, i) => {
+    if (c && x.c !== c) return;
+    if (only && !(any(x.f["JR+prev"]) && !any(x.f[base]))) return;
+    if (q && !(x.p.toLowerCase().includes(q) || x.i.some(t => t.toLowerCase().includes(q)))) return;
+    view.push(i);
+  });
+  $("count").textContent = `${view.length} prompts · dots: SP-Lens found, ${NAMES[base]} found`;
+  if (view.length && !view.includes(cur)) cur = view[0];
+  renderList(); render();
+}
+
+function renderList() {
+  const el = $("list");
+  el.innerHTML = view.map(i => { const x = D.items[i];
+    return `<button role="option" data-i="${i}" aria-current="${i === cur}"><span class="cat"><span class="dot ${any(x.f["JR+prev"]) ? "on" : ""}" title="SP-Lens"></span><span class="dot j ${any(x.f[base]) ? "on" : ""}" title="${NAMES[base]}"></span>${x.c}</span><span class="txt">${esc(x.p)}</span></button>`; }).join("");
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => { cur = +b.dataset.i; renderList(); render(); }));
+}
+
+function kwHtml(list) {
+  if (!list.length) return '<p class="empty">No word-like keywords survived the noise filter.</p>';
+  return `<div class="chips">${list.map(([k, h, n]) => `<span class="kw ${h ? "hit" : ""}">${esc(k)}<sup>${n}</sup></span>`).join("")}</div>`;
+}
+
+function render() {
+  const el = $("detail");
+  if (!view.length) { el.innerHTML = '<p class="empty">No prompts match. Clear the search or pick another category.</p>'; return; }
+  const x = D.items[cur];
+  const col = (a, cls) => { const f = any(x.f[a]);
+    return `<div class="col ${cls}"><h3>${NAMES[a]} <span class="status ${f && cls ? "yes" : ""}">${f ? "concept found" : "concept not found"}</span></h3>${kwHtml(x.k[a])}</div>`; };
+  const tok = ([t, h]) => { const s = D.vocab[t]; return `<span class="t ${h ? "hit" : wordlike.test(s) ? "" : "junk"}">${esc(show(s))}</span>`; };
+  const rows = x.L[base].map((_, l) => `<tr><td class="l">${D.layers[l]}</td><td>${x.L[base][l].map(tok).join("")}</td><td>${x.L["JR+prev"][l].map(tok).join("")}</td></tr>`).join("");
+  el.innerHTML = `
+    <div class="tag">${x.c}</div>
+    <p class="prompt">${esc(x.p)} <span class="ro" title="Token read out at this position">${esc(show(x.r))}</span></p>
+    <div class="chips"><span class="tag" style="align-self:center">Hidden concept</span>${x.i.map(t => `<span class="concept">${esc(t)}</span>`).join("")}</div>
+    <div class="cmp">${col(base, "")}${col("JR+prev", "sp")}</div>
+    <details><summary>Layer by layer: raw top 10 from each lens</summary>
+      <div class="layers"><table class="lay"><tr><th>Layer</th><th>${NAMES[base]}</th><th>SP-Lens</th></tr>${rows}</table></div>
+    </details>`;
+}
+
+["q", "cat", "onlysp"].forEach(id => $(id).addEventListener("input", filter));
+load();
+</script>
+</body>
+</html>

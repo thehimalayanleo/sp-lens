@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SP-Lens Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap">
+<style>
+/* Same page shape as the Neuron Persona Library (hero, atlas, by-layer, library, method), dark only. */
+:root {
+  --bg: #0b0c0f; --panel: #15171c; --panel2: #1c1f26; --line: #272b34; --ink: #f2f3f5; --muted: #9298a4; --dim: #5b616c;
+  --accent: #3b82f6;
+  --sp: #4f86ff; --both: #3fbf8f; --base: #f0a03c; --none: #2e323b;
+  --f-ui: Inter, "Helvetica Neue", Arial, sans-serif; --f-tok: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --f-serif: Newsreader, Georgia, serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--f-ui); }
+a { color: var(--accent); text-decoration: none; }
+button { font: inherit; color: inherit; }
+.w { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+nav { position: sticky; top: 0; z-index: 20; background: rgba(11,12,15,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+nav .w { display: flex; align-items: center; gap: 18px; height: 52px; }
+.brand { font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--ink); }
+.brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--sp); box-shadow: 0 0 10px var(--sp); }
+nav .links { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
+nav .links a { color: var(--muted); }
+nav .links a:hover { color: var(--ink); }
+.seg { display: inline-flex; background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button { background: none; border: 0; padding: 5px 11px; border-radius: 6px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: #2c313b; color: var(--ink); }
+.hero { text-align: center; padding: 72px 0 40px; }
+.hero h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.05; letter-spacing: -.025em; margin: 0 auto; max-width: 15ch; font-weight: 800; }
+.hero p { color: var(--muted); max-width: 60ch; margin: 20px auto 0; font-size: 17px; }
+.hero p b { color: var(--ink); }
+.cta { display: flex; gap: 16px; justify-content: center; align-items: center; margin-top: 26px; flex-wrap: wrap; }
+.btn { background: var(--accent); color: #fff; padding: 9px 18px; border-radius: 999px; font-weight: 500; font-size: 14px; }
+.chat { max-width: 640px; margin: 40px auto 0; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 22px; text-align: left; }
+.bub { max-width: 82%; padding: 9px 14px; border-radius: 16px; font-size: 14.5px; }
+.bub.u { margin-left: auto; background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
+.who { font-size: 11.5px; color: var(--dim); margin: 16px 0 5px; }
+.bub.m { background: var(--panel2); border-bottom-left-radius: 5px; }
+.chat .foot { display: flex; align-items: baseline; gap: 12px; border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; }
+.chat .foot .name { font-family: var(--f-serif); font-size: 22px; }
+.chat .foot .m2 { margin-left: auto; font: 12px var(--f-tok); color: var(--dim); }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { font: 12.5px var(--f-tok); padding: 2px 7px; border-radius: 5px; background: #23262e; color: #c9cdd5; }
+.chip.hit { background: rgba(79,134,255,.22); color: #cfe0ff; box-shadow: inset 0 0 0 1px rgba(79,134,255,.6); }
+.chip.dim { color: var(--dim); }
+section { padding: 64px 0; border-top: 1px solid var(--line); }
+h2 { font-size: 38px; letter-spacing: -.02em; margin: 0; font-weight: 700; }
+h3 { font-size: 20px; margin: 0; }
+.sub { color: var(--muted); max-width: 66ch; margin: 10px 0 0; }
+.bar-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 22px 0 14px; }
+.legend { display: flex; gap: 8px; flex-wrap: wrap; }
+.legend button { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; font-size: 13px; cursor: pointer; display: flex; gap: 7px; align-items: center; }
+.legend button[aria-pressed="false"] { opacity: .4; }
+.legend i { width: 9px; height: 9px; border-radius: 50%; }
+.legend span { color: var(--dim); font: 12px var(--f-tok); }
+.atlas { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px 8px; }
+.sq .h { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-bottom: 4px; }
+.sq .h b { color: var(--sp); font-weight: 500; }
+.sq canvas { width: 100%; aspect-ratio: 1; display: block; background: #101217; border-radius: 4px; cursor: crosshair; }
+#tip { position: fixed; z-index: 30; pointer-events: none; background: #1f232b; border: 1px solid #343a45; border-radius: 8px; padding: 8px 10px; font-size: 12.5px; max-width: 320px; display: none; }
+#tip .t { color: var(--dim); font-size: 11px; }
+.bylayer { display: grid; grid-template-columns: 220px 1fr; gap: 24px; margin-top: 44px; align-items: end; }
+@media (max-width: 760px) { .bylayer { grid-template-columns: 1fr; } }
+.bylayer svg { width: 100%; height: 170px; display: block; }
+.lib-ctl { display: grid; gap: 10px; margin: 24px 0 16px; }
+.lib-ctl .r { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+input[type=search] { flex: 1 1 320px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; color: var(--ink); font: inherit; }
+select { background: var(--panel); border: 1px solid var(--line); color: var(--ink); border-radius: 8px; padding: 6px 8px; font: 13px var(--f-ui); }
+.count { color: var(--muted); font-size: 13px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; cursor: pointer; text-align: left; }
+.card:hover { border-color: #3a404c; }
+.card .top { display: flex; gap: 8px; align-items: center; font: 11.5px var(--f-tok); color: var(--dim); }
+.tag { font: 11px var(--f-ui); padding: 1px 7px; border-radius: 999px; }
+.card .nm { font-family: var(--f-serif); font-size: 20px; line-height: 1.2; }
+.card .pr { color: #c4c8d0; font-size: 13.5px; }
+.card .lbl { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; }
+.more { margin: 20px auto 0; display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; cursor: pointer; }
+dialog { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; padding: 0; width: min(980px, calc(100vw - 24px)); max-height: 88vh; }
+dialog::backdrop { background: rgba(0,0,0,.6); }
+.dlg { padding: 22px; display: grid; gap: 14px; }
+.dlg .x { justify-self: end; background: var(--panel2); border: 0; border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+.lt { width: 100%; border-collapse: collapse; font: 12px var(--f-tok); }
+.lt th, .lt td { padding: 4px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.lt th { color: var(--muted); font: 600 11px var(--f-ui); position: sticky; top: 0; background: var(--panel); }
+.lt td.l { color: var(--dim); }
+.lt .h1 { color: #cfe0ff; background: rgba(79,134,255,.22); border-radius: 3px; padding: 0 3px; }
+.lt .dm { color: #6b717c; }
+.tw { overflow: auto; max-height: 46vh; border: 1px solid var(--line); border-radius: 10px; }
+.method { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+@media (max-width: 760px) { .method { grid-template-columns: 1fr; } }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; font: 13px/1.6 var(--f-tok); overflow: auto; margin: 10px 0; }
+.method p, .method li { color: #c4c8d0; font-size: 14.5px; }
+.method ul { padding-left: 18px; margin: 8px 0; }
+.rt { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+.rt th, .rt td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+.rt th:first-child, .rt td:first-child { text-align: left; }
+.rt th { color: var(--muted); font-weight: 500; font-size: 12.5px; }
+.rt td.best { color: var(--sp); font-weight: 600; }
+footer { border-top: 1px solid var(--line); padding: 28px 0 50px; color: var(--dim); font-size: 13px; }
+</style>
+</head>
+<body>
+<nav><div class="w">
+  <a class="brand" href="#top"><i></i>SP-Lens Library</a>
+  <div class="seg" id="modelSeg" aria-label="Model"></div>
+  <div class="links"><a href="#atlas">Atlas</a><a href="#library">Library</a><a href="#method">Method</a></div>
+</div></nav>
+
+<main id="top">
+<div class="w hero">
+  <h1>What open models think on the way to an answer</h1>
+  <p id="heroLede">Loading…</p>
+  <div class="cta"><a class="btn" href="#library">Search the library</a><a href="#atlas">View the atlas ›</a></div>
+  <div class="chat" id="chat"></div>
+</div>
+
+<section id="atlas"><div class="w">
+  <h2>Atlas of every layer</h2>
+  <p class="sub">Each square is one layer. Each dot is one prompt, colored by which lens names its hidden middle step in that layer's top 10 words. Hover a dot to see the prompt. Click it to open it. Click a color to show only that group.</p>
+  <div class="bar-row"><span class="count">Compare SP-Lens with</span><div class="seg" id="baseSeg"></div></div>
+  <div class="legend" id="legend"></div>
+  <div class="atlas" id="atlasGrid" style="margin-top:16px"></div>
+  <div class="bylayer">
+    <div><h3>By layer</h3><p class="sub" style="font-size:14px">Share of prompts whose hidden step is in that layer's top 10, for SP-Lens (blue) and the baseline (grey).</p></div>
+    <svg id="byLayer" role="img" aria-label="Share found by layer"></svg>
+  </div>
+</div></section>
+
+<section id="library"><div class="w">
+  <h2>Library</h2>
+  <p class="sub" id="libLede"></p>
+  <div class="lib-ctl">
+    <div class="r"><input type="search" id="q" placeholder="Search prompts, hidden steps and keywords"><select id="sort">
+      <option value="sp">SP-Lens wins first</option><option value="layers">Most layers</option><option value="cat">Category</option></select></div>
+    <div class="r"><div class="seg" id="catSeg"></div></div>
+    <div class="r"><div class="seg" id="statSeg"></div><span class="count" id="count"></span></div>
+  </div>
+  <div class="cards" id="cards"></div>
+  <button class="more" id="more">Show more</button>
+</div></section>
+
+<section id="method"><div class="w">
+  <h2>Method</h2>
+  <div class="method">
+    <div>
+      <h3>Setup</h3>
+      <p>Each prompt needs a middle step the model never writes out, such as a country it must think of before naming the capital. For each source layer we score every word in the vocabulary with four lenses and keep the top 10.</p>
+      <pre>SP-Lens  =  1.0 · R  +  0.25 · J  +  0.25 · logit  +  0.5 · prev</pre>
+      <p>R is the R-lens, J is the Jacobian lens (mean of dT[t']/dS[t] over later positions), logit is the logit lens, prev is the same readout at the previous position. A word list is cleaned by dropping prompt words and near-duplicates.</p>
+      <p>Keywords on the cards are a display step that never sees the answer: word-like tokens only, words that show up for 5% or more of prompts dropped, and score = Σ over layers of (1/rank) × log(N/df).</p>
+      <p>"Found" means one of the hidden step's tokens is in the top 10 at any source layer. This is simpler than the benchmark's pass@10.</p>
+    </div>
+    <div>
+      <h3>Results</h3>
+      <table class="rt" id="resTable"></table>
+      <h3 style="margin-top:28px">Limitations</h3>
+      <ul>
+        <li>421 confirmation prompts per model, 6 categories, three small open models.</li>
+        <li>The logit lens is close on Ouro. On Ouro-1.4B order-of-operations it wins (98% vs 95%).</li>
+        <li>Poetry and loose association are near 0% for every lens.</li>
+        <li>The keyword step can drop common correct words, such as "world".</li>
+        <li>These are reading results, not causal ones. A word in the list does not show the model uses it.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+</main>
+<footer><div class="w">SP-Lens, unpublished results. Data: SmolLM3-3B, Ouro-1.4B, Ouro-2.6B on the R/J-lens v2 confirmation set.</div></footer>
+
+<div id="tip"></div>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+
+<script>
+const MODELS = { smollm3_3b: "SmolLM3-3B", ouro_1p4b: "Ouro-1.4B", ouro_2p6b: "Ouro-2.6B" };
+const BASES = { R: "R-lens", J: "J-lens", logit: "Logit lens" };
+const STAT = [
+  { k: "sp", name: "SP-Lens only", c: "var(--sp)", hex: "#4f86ff" },
+  { k: "both", name: "Both", c: "var(--both)", hex: "#3fbf8f" },
+  { k: "base", name: "Baseline only", c: "var(--base)", hex: "#f0a03c" },
+  { k: "none", name: "Neither", c: "var(--none)", hex: "#2e323b" },
+];
+const CATC = { association: "#c084fc", multihop: "#60a5fa", multilingual: "#34d399", "order-ops": "#fbbf24", poetry: "#f472b6", typo: "#94a3b8" };
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const pct = x => (100 * x).toFixed(0) + "%";
+const st = { model: "smollm3_3b", base: "R", show: new Set(STAT.map(s => s.k)), cat: "all", stat: "all", q: "", n: 30 };
+try { st.model = localStorage.getItem("splens-model") in MODELS ? localStorage.getItem("splens-model") : st.model; } catch (e) {}
+const cache = {};
+let D;
+
+function seg(el, opts, cur, on) {
+  el.innerHTML = Object.entries(opts).map(([k, v]) => `<button data-k="${k}" aria-pressed="${k === cur}">${v}</button>`).join("");
+  el.onclick = e => { const b = e.target.closest("button"); if (!b) return;
+    el.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); on(b.dataset.k); };
+}
+async function get(m) {
+  if (!cache[m]) cache[m] = fetch(`../demo/data/${m}.json`).then(r => r.json()).then(prep);
+  return cache[m];
+}
+// Per item and lens: which layers have a hidden-step token in the top 10.
+function prep(d) {
+  for (const x of d.items) {
+    x.hit = {};
+    for (const a in x.L) x.hit[a] = x.L[a].map(layer => layer.some(([, h]) => h));
+    x.any = {};
+    for (const a in x.f) x.any[a] = x.f[a].some(Boolean);
+  }
+  return d;
+}
+const lay = l => l.includes(".") ? `loop ${l.split(".")[0]} · ${l.split(".")[1]}` : l;
+const status = (sp, b) => sp && b ? "both" : sp ? "sp" : b ? "base" : "none";
+
+async function load() {
+  D = await get(st.model);
+  heroChat(); atlas(); byLayer(); library(); results();
+}
+
+async function hero() {
+  const all = await Promise.all(Object.keys(MODELS).map(get));
+  const n = all.reduce((s, d) => s + d.items.length, 0);
+  const sp = all.reduce((s, d) => s + d.items.filter(x => x.any["JR+prev"]).length, 0);
+  const best = Math.max(...["R", "J", "logit"].map(b => all.reduce((s, d) => s + d.items.filter(x => x.any[b]).length, 0)));
+  $("#heroLede").innerHTML = `We read every layer of three open models on 421 prompts each, where the answer needs a hidden middle step. In <b>${sp.toLocaleString()}</b> of ${n.toLocaleString()} cases SP-Lens named that step in some layer's top 10 words. The best single standard lens named it in ${best.toLocaleString()}.`;
+  results(all);
+}
+
+let chatI = 0;
+function heroChat() {
+  const pool = D.items.filter(x => x.any["JR+prev"] && !x.any.R && !x.any.logit && !x.any.J);
+  const x = pool[chatI % pool.length]; if (!x) return;
+  const layers = x.hit["JR+prev"].map((h, i) => h ? i : -1).filter(i => i >= 0);
+  const mid = layers[Math.floor(layers.length / 2)];
+  const top = x.L["JR+prev"][mid].map(([v, h]) => `<span class="chip ${h ? "hit" : ""}">${esc(D.vocab[v].trim() || "·")}</span>`).join("");
+  $("#chat").innerHTML = `<div class="bub u">${esc(x.p)}</div>
+    <div class="who">${MODELS[st.model]}, layer ${lay(D.layers[mid])}, read with SP-Lens</div>
+    <div class="bub m"><div class="chips">${top}</div></div>
+    <div class="who">Same layer, R-lens</div>
+    <div class="bub m"><div class="chips">${x.L.R[mid].map(([v]) => `<span class="chip dim">${esc(D.vocab[v].trim() || "·")}</span>`).join("")}</div></div>
+    <div class="foot"><span class="name">${esc(x.i.join(" / "))}</span><span class="m2">hidden step · ${layers.length} layers</span>
+      <a href="#" id="nextChat" class="m2" style="margin-left:12px;color:var(--accent)">Another</a>
+      <a href="#" id="openChat" class="m2" style="margin-left:0;color:var(--accent)">Open prompt</a></div>`;
+  $("#nextChat").onclick = e => { e.preventDefault(); chatI += 7; heroChat(); };
+  $("#openChat").onclick = e => { e.preventDefault(); open_(D.items.indexOf(x)); };
+}
+
+function atlas() {
+  seg($("#baseSeg"), BASES, st.base, k => { st.base = k; atlas(); byLayer(); library(); });
+  const counts = Object.fromEntries(STAT.map(s => [s.k, 0]));
+  D.items.forEach(x => counts[status(x.any["JR+prev"], x.any[st.base])]++);
+  $("#legend").innerHTML = STAT.map(s => `<button data-k="${s.k}" aria-pressed="${st.show.has(s.k)}"><i style="background:${s.c}"></i>${s.name.replace("Baseline", BASES[st.base])} <span>${counts[s.k]}</span></button>`).join("");
+  $("#legend").onclick = e => { const b = e.target.closest("button"); if (!b) return;
+    const k = b.dataset.k; st.show.has(k) ? st.show.delete(k) : st.show.add(k); atlas(); };
+  const N = D.items.length, side = Math.ceil(Math.sqrt(N));
+  const grid = $("#atlasGrid"); grid.innerHTML = "";
+  D.layers.forEach((lab, li) => {
+    const share = D.items.filter(x => x.hit["JR+prev"][li]).length / N;
+    const sq = document.createElement("div"); sq.className = "sq";
+    sq.innerHTML = `<div class="h"><span>Layer ${lay(lab)}</span><b>${(100 * share).toFixed(1)}%</b></div>`;
+    const cv = document.createElement("canvas"); const px = side * 6; cv.width = cv.height = px; sq.appendChild(cv); grid.appendChild(sq);
+    const g = cv.getContext("2d");
+    D.items.forEach((x, i) => {
+      const s = status(x.hit["JR+prev"][li], x.hit[st.base][li]);
+      g.fillStyle = st.show.has(s) ? STAT.find(t => t.k === s).hex : "#16181d";
+      g.beginPath(); g.arc((i % side) * 6 + 3, Math.floor(i / side) * 6 + 3, 2.2, 0, 7); g.fill();
+    });
+    const at = e => { const r = cv.getBoundingClientRect(); const c = Math.floor((e.clientX - r.left) / r.width * side), w = Math.floor((e.clientY - r.top) / r.height * side);
+      const i = w * side + c; return i < N && c < side ? i : -1; };
+    cv.onmousemove = e => { const i = at(e); const t = $("#tip"); if (i < 0) { t.style.display = "none"; return; }
+      const x = D.items[i];
+      t.innerHTML = `<div class="t">Layer ${lay(lab)} · ${x.c}</div><div>${esc(x.p.slice(0, 140))}${x.p.length > 140 ? "…" : ""}</div><div class="t" style="margin-top:4px">hidden step: <b style="color:var(--ink)">${esc(x.i.join(" / "))}</b></div>`;
+      t.style.display = "block"; t.style.left = Math.min(e.clientX + 14, innerWidth - 330) + "px"; t.style.top = (e.clientY + 14) + "px"; };
+    cv.onmouseleave = () => $("#tip").style.display = "none";
+    cv.onclick = e => { const i = at(e); if (i >= 0) open_(i); };
+  });
+}
+
+function byLayer() {
+  const svg = $("#byLayer"), L = D.layers.length, N = D.items.length;
+  const W = 800, H = 170, pad = 22, bw = (W - 10) / L;
+  const sp = D.layers.map((_, li) => D.items.filter(x => x.hit["JR+prev"][li]).length / N);
+  const bs = D.layers.map((_, li) => D.items.filter(x => x.hit[st.base][li]).length / N);
+  const mx = Math.max(...sp, ...bs, .01);
+  const y = v => H - pad - v / mx * (H - pad - 16);
+  let s = "";
+  for (let li = 0; li < L; li++) {
+    const x0 = 5 + li * bw;
+    s += `<rect x="${x0 + bw * .1}" y="${y(bs[li])}" width="${bw * .38}" height="${H - pad - y(bs[li])}" fill="#59606c" rx="1.5"><title>Layer ${D.layers[li]}: ${BASES[st.base]} ${pct(bs[li])}</title></rect>`;
+    s += `<rect x="${x0 + bw * .5}" y="${y(sp[li])}" width="${bw * .38}" height="${H - pad - y(sp[li])}" fill="#4f86ff" rx="1.5"><title>Layer ${D.layers[li]}: SP-Lens ${pct(sp[li])}</title></rect>`;
+    if (li % Math.ceil(L / 8) === 0) s += `<text x="${x0 + bw / 2}" y="${H - 6}" fill="#5b616c" font-size="11" text-anchor="middle">${D.layers[li]}</text>`;
+  }
+  const im = sp.indexOf(Math.max(...sp));
+  s += `<text x="${Math.min(5 + im * bw + bw * .7, W - 16)}" y="${y(sp[im]) - 5}" fill="#9298a4" font-size="11" text-anchor="middle">${pct(sp[im])}</text>`;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.innerHTML = s;
+}
+
+function filtered() {
+  const q = st.q.toLowerCase();
+  let xs = D.items.map((x, i) => ({ x, i })).filter(({ x }) =>
+    (st.cat === "all" || x.c === st.cat) &&
+    (st.stat === "all" || status(x.any["JR+prev"], x.any[st.base]) === st.stat) &&
+    (!q || x.p.toLowerCase().includes(q) || x.i.join(" ").toLowerCase().includes(q) || x.k["JR+prev"].some(([k]) => k.includes(q))));
+  const sort = $("#sort").value;
+  const nl = x => x.hit["JR+prev"].filter(Boolean).length;
+  const rank = { sp: 0, both: 1, base: 2, none: 3 };
+  if (sort === "sp") xs.sort((a, b) => rank[status(a.x.any["JR+prev"], a.x.any[st.base])] - rank[status(b.x.any["JR+prev"], b.x.any[st.base])] || nl(b.x) - nl(a.x));
+  if (sort === "layers") xs.sort((a, b) => nl(b.x) - nl(a.x));
+  if (sort === "cat") xs.sort((a, b) => a.x.c.localeCompare(b.x.c));
+  return xs;
+}
+function library() {
+  const n = D.items.length, sp = D.items.filter(x => x.any["JR+prev"]).length, b = D.items.filter(x => x.any[st.base]).length;
+  $("#libLede").textContent = `All ${n} prompts for ${MODELS[st.model]}. SP-Lens names the hidden step in ${sp}; the ${BASES[st.base]} in ${b}. Search and filter them, or open any prompt to read every layer.`;
+  seg($("#catSeg"), { all: "All", ...Object.fromEntries(Object.keys(D.stats.catn).map(c => [c, c])) }, st.cat, k => { st.cat = k; st.n = 30; cards(); });
+  seg($("#statSeg"), { all: "Any", ...Object.fromEntries(STAT.map(s => [s.k, s.name.replace("Baseline", BASES[st.base])])) }, st.stat, k => { st.stat = k; st.n = 30; cards(); });
+  cards();
+}
+function kw(list, cls = "") { return list.map(([k, h]) => `<span class="chip ${h ? "hit" : cls}">${esc(k)}</span>`).join(""); }
+function cards() {
+  const xs = filtered();
+  $("#count").textContent = `${xs.length} prompts`;
+  $("#cards").innerHTML = xs.slice(0, st.n).map(({ x, i }) => {
+    const s = STAT.find(t => t.k === status(x.any["JR+prev"], x.any[st.base]));
+    const nl = x.hit["JR+prev"].filter(Boolean).length;
+    return `<button class="card" data-i="${i}">
+      <div class="top"><span class="tag" style="background:${CATC[x.c]}22;color:${CATC[x.c]}">${x.c}</span><span class="tag" style="background:${s.hex}22;color:${s.hex === "#2e323b" ? "#8a909b" : s.hex}">${s.name.replace("Baseline", BASES[st.base])}</span><span style="margin-left:auto">${nl}/${D.layers.length} layers</span></div>
+      <div class="nm">${esc(x.i.join(" / "))}</div>
+      <div class="pr">${esc(x.p.length > 170 ? x.p.slice(0, 170) + "…" : x.p)}</div>
+      <div class="lbl">SP-Lens keywords</div><div class="chips">${kw(x.k["JR+prev"].slice(0, 8))}</div>
+      <div class="lbl">${BASES[st.base]} keywords</div><div class="chips">${kw(x.k[st.base].slice(0, 6), "dim")}</div>
+    </button>`;
+  }).join("");
+  $("#more").style.display = xs.length > st.n ? "block" : "none";
+}
+$("#cards").onclick = e => { const c = e.target.closest(".card"); if (c) open_(+c.dataset.i); };
+$("#more").onclick = () => { st.n += 30; cards(); };
+$("#q").oninput = e => { st.q = e.target.value; st.n = 30; cards(); };
+$("#sort").onchange = cards;
+
+function open_(i) {
+  const x = D.items[i], arms = ["JR+prev", st.base];
+  const cell = (a, li) => x.L[a][li].slice(0, 6).map(([v, h]) => `<span class="${h ? "h1" : "dm"}">${esc(D.vocab[v].trim() || "·")}</span>`).join(" ");
+  $("#dlgBody").innerHTML = `<button class="x" onclick="dlg.close()">Close</button>
+    <div class="top" style="font:12px var(--f-tok);color:var(--dim)">${MODELS[st.model]} · ${x.c} · prompt ${i}</div>
+    <div class="nm" style="font:500 28px var(--f-serif)">${esc(x.i.join(" / "))}</div>
+    <div class="bub u" style="max-width:100%">${esc(x.p)}</div>
+    <div style="font-size:13px;color:var(--muted)">Model's next token: <span class="chip">${esc(x.r)}</span></div>
+    <div><div class="lbl" style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">SP-Lens keywords</div><div class="chips">${kw(x.k["JR+prev"])}</div></div>
+    <div><div class="lbl" style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">${BASES[st.base]} keywords</div><div class="chips">${kw(x.k[st.base], "dim")}</div></div>
+    <div class="tw"><table class="lt"><thead><tr><th>Layer</th><th>SP-Lens top 6</th><th>${BASES[st.base]} top 6</th></tr></thead><tbody>
+    ${D.layers.map((lab, li) => `<tr><td class="l">${lay(lab)}</td><td>${cell(arms[0], li)}</td><td>${cell(arms[1], li)}</td></tr>`).join("")}
+    </tbody></table></div>`;
+  dlg.showModal();
+}
+
+function results(all) {
+  if (!all) return;
+  const arms = [["JR+prev", "SP-Lens"], ["J-free", "SP-Lens, no J"], ["R", "R-lens"], ["J", "J-lens"], ["logit", "Logit lens"]];
+  const rates = all.map(d => Object.fromEntries(arms.map(([a]) => [a, d.items.filter(x => x.any[a]).length / d.items.length])));
+  $("#resTable").innerHTML = `<thead><tr><th>Found</th>${Object.values(MODELS).map(m => `<th>${m}</th>`).join("")}</tr></thead><tbody>` +
+    arms.map(([a, nm]) => `<tr><td>${nm}</td>${rates.map(r => { const best = Math.max(...Object.values(r)); return `<td class="${r[a] === best ? "best" : ""}">${pct(r[a])}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+}
+
+seg($("#modelSeg"), MODELS, st.model, k => { st.model = k; chatI = 0; try { localStorage.setItem("splens-model", k); } catch (e) {} load(); });
+const dlg = $("#dlg");
+dlg.onclick = e => { if (e.target === dlg) dlg.close(); };
+load().then(hero);
+</script>
+</body>
+</html>

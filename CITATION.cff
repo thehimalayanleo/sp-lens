@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use SP-Lens, please cite it."
+title: "SP-Lens: reading hidden concepts in language model layers"
+authors:
+  - family-names: Mulay
+    given-names: Ajinkya K
+repository-code: "https://github.com/thehimalayanleo/splens"
+license: MIT
+version: 0.1.0
+date-released: 2026-11-10
